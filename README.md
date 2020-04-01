@@ -2,6 +2,10 @@
 
 该项目可用于java、spark和hadoop项目的运行日志转发到kafka
 
+# 前言
+
+工程中的日志通过该SDK收集发送到kafka，通过logstash收集到ES，通过kibana建立项目日志索引区分查看
+
 # 操作方法
 
 ## Spark on Yarn 日志接入ES
@@ -129,6 +133,29 @@ log4j.appender.console.layout.ConversionPattern=%d (%t) [%p - %l] %m%n
     "host_name": "DESKTOP-V0FGT1M"
 }
 ```
+
+logstash配置
+```shell
+input {
+    kafka {
+        bootstrap_servers => ["hadoop001.idc01.psjy.com.pro:9092,hadoop002.idc01.psjy.com.pro:9092,hadoop003.idc01.psjy.com.pro:9092,hadoop004.idc01.psjy.com.pro:9092,hadoop005.idc01.psjy.com.pro:9092"]
+        group_id => "es-transfer"
+        topics => ["HOTWHEELS-REALTIME_LOG"]
+        consumer_threads => 5
+        decorate_events => true
+        codec => "json"
+        }
+}
+output {
+    elasticsearch {
+        hosts => ["hadoop005.idc01.psjy.com.pro:9200","hadoop004.idc01.psjy.com.pro:9200"]
+        codec => "json"
+        index => "%{eventChannel}"
+   }
+}
+```
+
+
 
 # 赞助
 <img src="https://github.com/duhanmin/mathematics-statistics-python/blob/master/images/90f9a871536d5910cad6c10f0297fc7.jpg" width="250">
