@@ -155,7 +155,7 @@ output {
 }
 ```
 
+# 参考资料
 
+https://duhanmin.github.io/2020/04/01/%E9%80%9A%E7%94%A8%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86SDK/
 
-# 赞助
-<img src="https://github.com/duhanmin/mathematics-statistics-python/blob/master/images/90f9a871536d5910cad6c10f0297fc7.jpg" width="250">
