@@ -138,7 +138,7 @@ logstash配置
 ```shell
 input {
     kafka {
-        bootstrap_servers => ["hadoop001.idc01.psjy.com.pro:9092,hadoop002.idc01.psjy.com.pro:9092,hadoop003.idc01.psjy.com.pro:9092,hadoop004.idc01.psjy.com.pro:9092,hadoop005.idc01.psjy.com.pro:9092"]
+        bootstrap_servers => ["ip1:port,ip2:port"]
         group_id => "es-transfer"
         topics => ["HOTWHEELS-REALTIME_LOG"]
         consumer_threads => 5
@@ -148,7 +148,7 @@ input {
 }
 output {
     elasticsearch {
-        hosts => ["hadoop005.idc01.psjy.com.pro:9200","hadoop004.idc01.psjy.com.pro:9200"]
+        hosts => ["ip1:port","ip2:port"]
         codec => "json"
         index => "%{eventChannel}"
    }
