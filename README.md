@@ -35,7 +35,7 @@
         </encoder>
     </appender>
 
-    <appender name="KAFKA" class="com.router.log.kafka.log4jappender.KafkaLogbackAppender">
+    <appender name="KAFKA" class="com.duhanmin.router.log.kafka.log4jappender.KafkaLogbackAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>WARN</level>
         </filter>
@@ -48,7 +48,7 @@
     <!--设置日志输出为文件-->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>logFile.log</File>
-        <rollingPolicy  class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>logFile.%d{yyyy-MM-dd_HH-mm}.log.zip</FileNamePattern>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -109,7 +109,7 @@ log4j.appender.console.layout.ConversionPattern=%d (%t) [%p - %l] %m%n
 <dependency>
     <groupId>com.router</groupId>
     <artifactId>log-router</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 </dependency>
 ```
 

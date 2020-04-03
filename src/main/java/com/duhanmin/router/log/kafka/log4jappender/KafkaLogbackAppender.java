@@ -1,11 +1,11 @@
-package com.router.log.kafka.log4jappender;
+package com.duhanmin.router.log.kafka.log4jappender;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.AppenderBase;
 import com.alibaba.fastjson.JSONArray;
-import com.router.log.entity.EventLogEntry;
+import com.duhanmin.router.log.entity.EventLogEntry;
 import lombok.Data;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -19,7 +19,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * Logback方式
+ */
 @Data
 public class KafkaLogbackAppender extends AppenderBase<ILoggingEvent> {
 
@@ -27,6 +31,7 @@ public class KafkaLogbackAppender extends AppenderBase<ILoggingEvent> {
     private String topic;
     private boolean syncSend;
     private String appName;
+    private int timeOutMilliseconds = 100;
     private Producer<byte[], byte[]> producer;
 
     @Override
@@ -58,7 +63,7 @@ public class KafkaLogbackAppender extends AppenderBase<ILoggingEvent> {
                 new ProducerRecord(this.topic, message.getBytes(StandardCharsets.UTF_8)));
         if (this.syncSend) {
             try {
-                response.get();
+                response.get(timeOutMilliseconds, TimeUnit.MILLISECONDS);
             } catch (Exception e) {
                 LogLog.error("Exception while getting response", e);
             }

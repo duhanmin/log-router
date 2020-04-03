@@ -1,7 +1,7 @@
-package com.router.log.kafka.log4jappender;
+package com.duhanmin.router.log.kafka.log4jappender;
 
-import com.router.log.entity.EventLogEntry;
-import com.router.log.util.ExceptionUtils;
+import com.duhanmin.router.log.entity.EventLogEntry;
+import com.duhanmin.router.log.util.ExceptionUtils;
 import lombok.Data;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -18,7 +18,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * Log4j方式
+ */
 @Data
 public class KafkaLog4jAppender extends AppenderSkeleton {
     private String brokerList;
@@ -40,6 +44,7 @@ public class KafkaLog4jAppender extends AppenderSkeleton {
     private boolean ignoreExceptions = true;
     private boolean syncSend;
     private String appName;
+    private int timeOutMilliseconds = 100;
     private Producer<byte[], byte[]> producer;
 
     public int getMaxBlockMs()
@@ -112,8 +117,8 @@ public class KafkaLog4jAppender extends AppenderSkeleton {
                 new ProducerRecord(this.topic, message.getBytes(StandardCharsets.UTF_8)));
         if (this.syncSend) {
             try {
-                response.get();
-            } catch (InterruptedException|ExecutionException ex) {
+                response.get(timeOutMilliseconds, TimeUnit.MILLISECONDS);
+            } catch (Exception ex) {
                 if (!this.ignoreExceptions) {
                     throw new RuntimeException(ex);
                 }
