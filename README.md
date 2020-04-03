@@ -95,7 +95,7 @@ log4j.appender.console.layout.ConversionPattern=%d (%t) [%p - %l] %m%n
 <repositories>
     <repository>
         <id>maven-repo-master</id>
-        <url>https://raw.github.com/duhanmin/log-router/master/</url>
+        <url>https://raw.github.com/duhanmin/mvn-repo/master/</url>
         <snapshots>
             <enabled>true</enabled>
             <updatePolicy>always</updatePolicy>
