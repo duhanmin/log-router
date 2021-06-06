@@ -107,7 +107,7 @@ log4j.appender.console.layout.ConversionPattern=%d (%t) [%p - %l] %m%n
 包
 ```xml
 <dependency>
-    <groupId>com.router</groupId>
+    <groupId>com.duhanmin</groupId>
     <artifactId>log-router</artifactId>
     <version>0.1.1</version>
 </dependency>
