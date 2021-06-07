@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.duhanmin</groupId>
+    <groupId>io.github.duhanmin</groupId>
     <artifactId>log-router</artifactId>
     <version>0.1.1</version>
     <packaging>jar</packaging>
@@ -62,9 +62,9 @@
             <!--打包插件-->
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.1</version>
+                <version>2.8.2</version>
                 <configuration>
-                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/repository</altDeploymentRepository>
+                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/log-router</altDeploymentRepository>
                 </configuration>
             </plugin>
 
@@ -92,7 +92,7 @@
                     <message >Maven artifacts for ${project.version}</message>
                     <noJekyll>true</noJekyll>
                     <!--本地jar地址-->
-                    <outputDirectory>${project.build.directory}/repository</outputDirectory>
+                    <outputDirectory>${project.build.directory}/log-router</outputDirectory>
                     <!--分支-->
                     <branch>refs/heads/master</branch>
                     <merge>true</merge>

@@ -1,7 +1,7 @@
-package com.duhanmin.router.log.kafka.log4jappender;
+package io.github.duhanmin.router.log.kafka.log4jappender;
 
-import com.duhanmin.router.log.entity.EventLogEntry;
-import com.duhanmin.router.log.util.ExceptionUtils;
+import io.github.duhanmin.router.log.entity.EventLogEntry;
+import io.github.duhanmin.router.log.util.ExceptionUtils;
 import lombok.Data;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -16,7 +16,6 @@ import org.apache.log4j.spi.LoggingEvent;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 

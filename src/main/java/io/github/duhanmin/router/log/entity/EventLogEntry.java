@@ -1,4 +1,4 @@
-package com.duhanmin.router.log.entity;
+package io.github.duhanmin.router.log.entity;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;

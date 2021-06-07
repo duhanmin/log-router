@@ -1,11 +1,11 @@
-package com.duhanmin.router.log.kafka.log4jappender;
+package io.github.duhanmin.router.log.kafka.log4jappender;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.AppenderBase;
 import com.alibaba.fastjson.JSONArray;
-import com.duhanmin.router.log.entity.EventLogEntry;
+import io.github.duhanmin.router.log.entity.EventLogEntry;
 import lombok.Data;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;

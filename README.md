@@ -35,7 +35,7 @@
         </encoder>
     </appender>
 
-    <appender name="KAFKA" class="com.duhanmin.router.log.kafka.log4jappender.KafkaLogbackAppender">
+    <appender name="KAFKA" class="io.github.duhanmin.router.log.kafka.log4jappender.KafkaLogbackAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>WARN</level>
         </filter>

@@ -2,7 +2,7 @@
  * *@Copyright: 2019 www.pingshiedu.com inc . All rights reserved.
  * *注意：本内容仅限于评师教育内部传阅，禁止外泄以及用于其他的商业目
  */
-package com.duhanmin.router.log.util;
+package io.github.duhanmin.router.log.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
