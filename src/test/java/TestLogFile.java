@@ -9,6 +9,6 @@ public class TestLogFile {
     private static final Logger logger = LogManager.getLogger(TestLogFile.class);
 
     public static void main(String[] args) {
-        logger.error("2",new NullPointerException());
+        logger.error("2FFFFFFFFFFFFFFFFF",new NullPointerException());
     }
 }
