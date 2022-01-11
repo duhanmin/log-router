@@ -90,7 +90,31 @@ log4j.appender.console.layout.ConversionPattern=%d (%t) [%p - %l] %m%n
 
 ## log4j2方式配置模板
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>
 
+<configuration status="INFO" monitorInterval="30" packages="logger.FileAppender">
+    <appenders>
+        <!--这个输出控制台的配置-->
+        <console name="Console" target="SYSTEM_OUT">
+            <!--输出日志的格式-->
+            <PatternLayout pattern="%highlight{[ %p ] [%-d{yyyy-MM-dd HH:mm:ss}] [%l] %m%n}"/>
+        </console>
+
+        <!-- 这个就是自定义的Appender -->
+        <FeiShuLog4j2Appender name="FeiShuLog4j2Appender" appName = "FeiShuLog4j2Appender" syncSend="true" url="https://open.feishu.cn/open-apis/bot/v2/hook/b675ed8d-c7fa-4225-ae42-45a519831456">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %logger{36} %L %M - %msg%xEx%n"/>
+        </FeiShuLog4j2Appender>
+
+    </appenders>
+
+    <loggers>
+        <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
+        <root level="INFO">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="FeiShuLog4j2Appender"/>
+        </root>
+    </loggers>
+</configuration>
 ```
 
 ## Maven引入Jar包
