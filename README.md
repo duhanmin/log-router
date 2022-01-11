@@ -88,6 +88,11 @@ log4j.appender.console.layout=org.apache.log4j.PatternLayout
 log4j.appender.console.layout.ConversionPattern=%d (%t) [%p - %l] %m%n
 ```
 
+## log4j2方式配置模板
+```xml
+
+```
+
 ## Maven引入Jar包
 
 下载源

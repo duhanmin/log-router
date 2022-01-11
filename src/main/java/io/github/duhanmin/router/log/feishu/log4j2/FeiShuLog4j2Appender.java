@@ -1,8 +1,9 @@
 package io.github.duhanmin.router.log.feishu.log4j2;
 
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.github.duhanmin.router.log.entity.EventLogEntry;
 import org.apache.logging.log4j.core.Filter;
@@ -31,7 +32,7 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
     private int timeOutMilliseconds = 500;
 
     public FeiShuLog4j2Appender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions,
-                                String appName,boolean syncSend,String url) {
+                                String appName, boolean syncSend, String url) {
         super(name, filter, layout, ignoreExceptions,null);
         this.appName = appName;
         this.syncSend = syncSend;
@@ -49,7 +50,8 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
             EventLogEntry message = subAppend(event);
             if (message.getLevel().toLowerCase(Locale.ROOT).equals("error")){
                 final String log = StrUtil.format(feishu, appName, message.getTimeStamp(), message.getLevel(),
-                        message.getHostName(), message.getMessage());
+                        message.getHostName(), message.getThrowableInfo());
+                System.out.println(JSONUtil.toJsonStr(log));
                 message(log);
             }
         }catch (Exception e){
@@ -61,8 +63,8 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
     @PluginFactory
     public static FeiShuLog4j2Appender createAppender(@PluginAttribute("name") String name,
                                                       @PluginAttribute("appName") String appName,
-                                                      @PluginAttribute("appName") boolean syncSend,
-                                                      @PluginAttribute("appName") String url,
+                                                      @PluginAttribute("syncSend") boolean syncSend,
+                                                      @PluginAttribute("url") String url,
                                                       @PluginElement("Filter") final Filter filter,
                                                       @PluginElement("Layout") Layout<? extends Serializable> layout,
                                                       @PluginAttribute("ignoreExceptions") boolean ignoreExceptions) {
@@ -76,7 +78,10 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
         Map<String,Object> map = new HashMap<>();
         map.put("msg_type", "interactive");
         map.put("card", content);
-        ThreadUtil.execute(() -> HttpRequest.post(url).body(JSONUtil.toJsonStr(map)).timeout(timeOutMilliseconds).execute(syncSend));
+        System.out.println(JSONUtil.toJsonStr(map));
+        final HttpResponse execute = HttpRequest.post(url).body(JSONUtil.toJsonStr(map)).timeout(timeOutMilliseconds).execute();
+        System.out.println(execute.body());
+        //ThreadUtil.execute(() -> HttpRequest.post(url).body(JSONUtil.toJsonStr(map)).timeout(timeOutMilliseconds).execute(syncSend));
     }
 
     /**
@@ -86,6 +91,7 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
      */
     private EventLogEntry subAppend(LogEvent event) {
         EventLogEntry eventLogEntry = new EventLogEntry();
+        JSONObject json = new JSONObject();
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             eventLogEntry.setHostName(inetAddress.getHostName());
@@ -94,10 +100,14 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
             e.printStackTrace();
         }finally {
             try{
-                eventLogEntry.setThrowableInfo(toSerializable(event).toString());
+                final String msg = toSerializable(event).toString();
+                System.out.println(msg);
+                json.putOpt("msg",msg);
             }catch (Exception e){
-                eventLogEntry.setThrowableInfo("-");
+
+                json.putOpt("msg","-");
             }finally {
+                eventLogEntry.setThrowableInfo(json.toString());
                 eventLogEntry.setEventId(UUID.randomUUID().toString());
                 eventLogEntry.setEventTime(System.currentTimeMillis());
                 eventLogEntry.setEventChannel(this.appName);
