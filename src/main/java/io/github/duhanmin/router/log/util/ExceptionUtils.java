@@ -18,6 +18,7 @@ public class ExceptionUtils {
     private static final char TAB = '	';
     private static final char CR = '\r';
     private static final char LF = '\n';
+    private static final String LF_ = "\\\\n";
     private static final String SPACE = " ";
     private static final String EMPTY = "";
 
@@ -36,6 +37,18 @@ public class ExceptionUtils {
         return stacktraceToString(throwable, limit, replaceCharToStrMap);
     }
 
+    /**
+     * 堆栈转为单行完整字符串
+     *
+     * @param throwable 异常对象
+     * @return 堆栈转为的字符串
+     */
+    public static String stacktraceToOneLineString(String throwable) {
+        throwable = throwable.replaceAll(CR+"", SPACE);
+        throwable = throwable.replaceAll(LF+"", LF_);
+        throwable = throwable.replaceAll(TAB+"", EMPTY);
+        return throwable;
+    }
 
     /**
      * 堆栈转为完整字符串

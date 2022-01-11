@@ -1,11 +1,13 @@
 package io.github.duhanmin.router.log.feishu.log4j2;
 
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.github.duhanmin.router.log.entity.EventLogEntry;
+import io.github.duhanmin.router.log.util.ExceptionUtils;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
@@ -51,7 +53,6 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
             if (message.getLevel().toLowerCase(Locale.ROOT).equals("error")){
                 final String log = StrUtil.format(feishu, appName, message.getTimeStamp(), message.getLevel(),
                         message.getHostName(), message.getThrowableInfo());
-                System.out.println(JSONUtil.toJsonStr(log));
                 message(log);
             }
         }catch (Exception e){
@@ -78,10 +79,7 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
         Map<String,Object> map = new HashMap<>();
         map.put("msg_type", "interactive");
         map.put("card", content);
-        System.out.println(JSONUtil.toJsonStr(map));
-        final HttpResponse execute = HttpRequest.post(url).body(JSONUtil.toJsonStr(map)).timeout(timeOutMilliseconds).execute();
-        System.out.println(execute.body());
-        //ThreadUtil.execute(() -> HttpRequest.post(url).body(JSONUtil.toJsonStr(map)).timeout(timeOutMilliseconds).execute(syncSend));
+        ThreadUtil.execute(() -> HttpRequest.post(url).body(JSONUtil.toJsonStr(map)).timeout(timeOutMilliseconds).execute());
     }
 
     /**
@@ -91,7 +89,6 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
      */
     private EventLogEntry subAppend(LogEvent event) {
         EventLogEntry eventLogEntry = new EventLogEntry();
-        JSONObject json = new JSONObject();
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             eventLogEntry.setHostName(inetAddress.getHostName());
@@ -101,21 +98,17 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
         }finally {
             try{
                 final String msg = toSerializable(event).toString();
-                System.out.println(msg);
-                json.putOpt("msg",msg);
+                eventLogEntry.setThrowableInfo(ExceptionUtils.stacktraceToOneLineString(msg));
             }catch (Exception e){
-
-                json.putOpt("msg","-");
+                eventLogEntry.setThrowableInfo("-");
             }finally {
-                eventLogEntry.setThrowableInfo(json.toString());
                 eventLogEntry.setEventId(UUID.randomUUID().toString());
                 eventLogEntry.setEventTime(System.currentTimeMillis());
                 eventLogEntry.setEventChannel(this.appName);
                 eventLogEntry.setLevel(event.getLevel().toString());
                 eventLogEntry.setMessage(event.getMessage().getFormattedMessage());
                 eventLogEntry.setThreadName(event.getThreadName());
-
-                String date = new java.text.SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(event.getTimeMillis()));
+                String date = new java.text.SimpleDateFormat("yyyy-dd-MM HH:mm:ss SSS").format(new Date(event.getTimeMillis()));
                 eventLogEntry.setTimeStamp(date);
             }
         }
