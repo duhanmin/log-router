@@ -1,4 +1,4 @@
-package io.github.duhanmin.router.log.kafka.log4jappender;
+package io.github.duhanmin.router.log.kafka.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
@@ -16,6 +16,7 @@ import org.apache.log4j.helpers.LogLog;
 
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.Future;
@@ -101,7 +102,8 @@ public class KafkaLogbackAppender extends AppenderBase<ILoggingEvent> {
                 eventLogEntry.setEventChannel(this.appName);
                 eventLogEntry.setLevel(event.getLevel().levelStr);
                 eventLogEntry.setMessage(event.getFormattedMessage());
-                eventLogEntry.setTimeStamp(event.getTimeStamp());
+                String date = new java.text.SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(event.getTimeStamp()));
+                eventLogEntry.setTimeStamp(date);
             }
         }
         return eventLogEntry.toString();

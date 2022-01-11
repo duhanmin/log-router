@@ -1,4 +1,4 @@
-package io.github.duhanmin.router.log.kafka.log4jappender;
+package io.github.duhanmin.router.log.kafka.log4j;
 
 import io.github.duhanmin.router.log.entity.EventLogEntry;
 import io.github.duhanmin.router.log.util.ExceptionUtils;
@@ -155,7 +155,8 @@ public class KafkaLog4jAppender extends AppenderSkeleton {
                 eventLogEntry.setLevel(event.getLevel().toString());
                 eventLogEntry.setMessage(event.getMessage().toString());
                 eventLogEntry.setThreadName(event.getThreadName());
-                eventLogEntry.setTimeStamp(event.timeStamp);
+                String date = new java.text.SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(event.timeStamp));
+                eventLogEntry.setTimeStamp(date);
             }
         }
         return eventLogEntry.toString();

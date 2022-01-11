@@ -63,7 +63,7 @@ public class EventLogEntry implements Serializable {
     /**
      * 该时间是日志通道自动时间
      */
-    private Long timeStamp;
+    private String timeStamp;
 
     /**
      * 堆栈信息
