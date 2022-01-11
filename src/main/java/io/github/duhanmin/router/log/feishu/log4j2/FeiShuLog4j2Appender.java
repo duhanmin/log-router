@@ -1,10 +1,8 @@
 package io.github.duhanmin.router.log.feishu.log4j2;
 
-import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import io.github.duhanmin.router.log.entity.EventLogEntry;
 import io.github.duhanmin.router.log.util.ExceptionUtils;
@@ -21,6 +19,8 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hawkingfoo on 2017/6/29 0029.
@@ -28,6 +28,7 @@ import java.util.*;
 @Plugin(name = "FeiShuLog4j2Appender", category = "Core", elementType = "appender", printObject = true)
 public class FeiShuLog4j2Appender extends AbstractAppender {
     private static final String feishu = "{\"config\":{\"wide_screen_mode\":true},\"header\":{\"title\":{\"content\":\"服务错误日志\",\"tag\":\"plain_text\"}},\"i18n_elements\":{\"zh_cn\":[{\"fields\":[{\"is_short\":true,\"text\":{\"content\":\"**服务名：**\\n{}\",\"tag\":\"lark_md\"}},{\"is_short\":true,\"text\":{\"content\":\"**时间：**\\n{}\",\"tag\":\"lark_md\"}},{\"is_short\":false,\"text\":{\"content\":\"\",\"tag\":\"lark_md\"}},{\"is_short\":true,\"text\":{\"content\":\"**级别：**\\n{}\",\"tag\":\"lark_md\"}},{\"is_short\":true,\"text\":{\"content\":\"**机器：**\\n{}\",\"tag\":\"lark_md\"}},{\"is_short\":false,\"text\":{\"content\":\"\",\"tag\":\"lark_md\"}}],\"tag\":\"div\"},{\"tag\":\"hr\"},{\"tag\":\"div\",\"text\":{\"content\":\"**告警内容**\\n{}\",\"tag\":\"lark_md\"}}]}}";
+    private static ExecutorService executor = ExecutorBuilder.create().setCorePoolSize(30).setMaxPoolSize(100).setKeepAliveTime(1, TimeUnit.SECONDS).build();
     private String url;
     private String appName;
     private boolean syncSend;
@@ -76,10 +77,16 @@ public class FeiShuLog4j2Appender extends AbstractAppender {
     }
 
     public void message(String content){
-        Map<String,Object> map = new HashMap<>();
-        map.put("msg_type", "interactive");
-        map.put("card", content);
-        ThreadUtil.execute(() -> HttpRequest.post(url).body(JSONUtil.toJsonStr(map)).timeout(timeOutMilliseconds).execute());
+        try {
+            executor.execute(() -> {
+                Map<String,Object> map = new HashMap<>();
+                map.put("msg_type", "interactive");
+                map.put("card", content);
+                try {
+                    HttpRequest.post(url).body(JSONUtil.toJsonStr(map)).timeout(timeOutMilliseconds).execute();
+                }catch (Exception e){ }
+            });
+        }catch (Exception e){ }
     }
 
     /**

@@ -19,7 +19,7 @@
         <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
         <root level="INFO">
             <appender-ref ref="Console"/>
-            <appender-ref ref="FeiShuLog4j2Appender"/>
+            <appender-ref ref="FeiShuLog4j2Appender" level="ERROR" />
         </root>
     </loggers>
 </configuration>
