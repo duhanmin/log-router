@@ -1,10 +1,11 @@
 # Log-Router
 
-该项目可用于java、spark和hadoop项目的运行日志转发到kafka
+该项目可用于java、spark和hadoop项目的运行日志转发到kafka/飞书
 
 # 前言
 
-工程中的日志通过该SDK收集发送到kafka，通过logstash收集到ES，通过kibana建立项目日志索引区分查看
+* 工程中的日志通过该SDK收集发送到kafka，通过logstash收集到ES，通过kibana建立项目日志索引区分查看
+* 日志直接输出飞书
 
 # 操作方法
 
@@ -89,6 +90,7 @@ log4j.appender.console.layout.ConversionPattern=%d (%t) [%p - %l] %m%n
 ```
 
 ## log4j2方式配置模板
+可以将日志打到飞书
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
